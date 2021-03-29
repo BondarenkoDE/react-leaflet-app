@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       marginBottom: '20px',
@@ -19,14 +19,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Menu = () => {
+export default function Menu({ calculate }) {
   const classes = useStyles();
-  let test = false;
-
-  const onChangeCheckbox = () => {
-    test = !test;
-    console.log(test);
-  };
 
   return (
     <div className="wrapper">
@@ -53,10 +47,7 @@ const Menu = () => {
 
       <div className="flex">
         <Box textAlign="left">Зона по ПДКсс:</Box>
-        <FormControlLabel
-          control={<Checkbox color="primary" onChange={onChangeCheckbox} />}
-          label="Secondary"
-        />
+        <FormControlLabel control={<Checkbox color="primary" />} label="Secondary" />
         <FormControlLabel control={<Checkbox color="primary" />} label="Secondary" />
         <Box textAlign="left" marginTop="20px">
           Зона по ПДКмр:
@@ -66,13 +57,11 @@ const Menu = () => {
       </div>
 
       <div className="btns">
-        <Button variant="contained" color="primary">
+        <Button onClick={calculate} variant="contained" color="primary">
           Применить
         </Button>
         <Button variant="contained">Сбросить</Button>
       </div>
     </div>
   );
-};
-
-export default Menu;
+}

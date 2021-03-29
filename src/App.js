@@ -1,13 +1,8 @@
 import React from 'react';
-import { Menu, Map } from './components';
+import Main from './components/Main';
 
 function App() {
-  return (
-    <>
-      <Menu />
-      <Map />
-    </>
-  );
+  return <Main />;
 }
 
 export default App;
