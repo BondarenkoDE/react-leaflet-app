@@ -1,9 +1,10 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import { CRS } from 'leaflet';
 
-export default function Map({ objects, position, grid }) {
+export default function Map({ objects, position, grid, pointsWithAmmonia }) {
   return (
-    <MapContainer className="full-page" center={position} zoom={10}>
+    <MapContainer className="full-page" center={position} zoom={10} crs={CRS.EPSG4326}>
       /*11.5*/
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -32,16 +33,16 @@ export default function Map({ objects, position, grid }) {
         opacity="1"
         fillOpacity="1"
         fillColor="black"
-        radius={45}
+        radius={1}
       />
-      {grid.map((point, index) => {
+      {pointsWithAmmonia.map((point, index) => {
         return (
           <Circle
             key={`${index}`}
             center={point}
             color="#red"
-            opacity="0.5"
-            fillOpacity="0.5"
+            opacity="1"
+            fillOpacity="1"
             fillColor="red"
             radius={45}
           />

@@ -19,15 +19,16 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Menu({ calculate }) {
+export default function Menu({ calculate, editWind, editDegree }) {
   const classes = useStyles();
 
   return (
     <div className="wrapper">
       <form className={classes.root} noValidate autoComplete="off">
         <TextField
+          onChange={editWind}
           label="Скорость ветра"
-          id="outlined-start-adornment"
+          id="outlined-start-adornment-one"
           className={clsx(classes.margin, classes.textField)}
           InputProps={{
             endAdornment: <InputAdornment position="end">м/с</InputAdornment>,
@@ -35,8 +36,9 @@ export default function Menu({ calculate }) {
           variant="outlined"
         />
         <TextField
+          onChange={editDegree}
           label="Направление ветра"
-          id="outlined-start-adornment"
+          id="outlined-start-adornment-two"
           className={clsx(classes.margin, classes.textField)}
           InputProps={{
             endAdornment: <InputAdornment position="end">градусов</InputAdornment>,
