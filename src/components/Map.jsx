@@ -44,7 +44,7 @@ export default function Map({ objects, position, grid, pointsWithAmmonia }) {
             opacity="1"
             fillOpacity="1"
             fillColor="red"
-            radius={45}
+            radius={70}
           />
         );
       })}

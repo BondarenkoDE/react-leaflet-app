@@ -73,13 +73,11 @@ export default function Main() {
   const stepLat = 0.005;
   const stepLng = 0.005;
 
-  let grid = [];
-
   const [gridCoordinates, setGridCoordinates] = React.useState([]);
   const [newGridCoordinates, setNewGridCoordinates] = React.useState([]);
   const [pointsWithAmmonia, setPointsWithAmmonia] = React.useState([]);
   //   const [pointsWithHydrogen, setPointsWithHydrogen] = React.useState([]);
-  //   const [arial, setArial] = React.useState([]);
+
   let newGrid = [];
   let pointsAmmonia = [];
   let pointsHydrogen = [];
@@ -112,6 +110,9 @@ export default function Main() {
   const calculate = () => {
     // РАСЧЕТ КООРДИНАТ УЗЛОВ СЕТКИ
 
+    /* const grid = [];
+    const gridOld = [];
+
     // Расчет точек замера выше оси X слева
     let lng = position[1];
     let lat = position[0];
@@ -130,6 +131,7 @@ export default function Main() {
           (lng - position[1]) * Math.cos(degree * (3.1415926535 / 180)) -
           (lat - position[0]) * Math.sin(degree * (3.1415926535 / 180));
         grid.push([newLat, newLng]);
+        gridOld.push([lat, lng]);
         lat += stepLat;
         newLat =
           position[0] +
@@ -163,6 +165,7 @@ export default function Main() {
           (lng - position[1]) * Math.cos(degree * (3.1415926535 / 180)) -
           (lat - position[0]) * Math.sin(degree * (3.1415926535 / 180));
         grid.push([newLat, newLng]);
+        gridOld.push([lat, lng]);
         lat -= stepLat;
         newLat =
           position[0] +
@@ -195,6 +198,7 @@ export default function Main() {
           (lng - position[1]) * Math.cos(degree * (3.1415926535 / 180)) -
           (lat - position[0]) * Math.sin(degree * (3.1415926535 / 180));
         grid.push([newLat, newLng]);
+        gridOld.push([lat, lng]);
         lat += stepLat;
         newLat =
           position[0] +
@@ -228,6 +232,7 @@ export default function Main() {
           (lng - position[1]) * Math.cos(degree * (3.1415926535 / 180)) -
           (lat - position[0]) * Math.sin(degree * (3.1415926535 / 180));
         grid.push([newLat, newLng]);
+        gridOld.push([lat, lng]);
         lat -= stepLat;
         newLat =
           position[0] +
@@ -241,23 +246,85 @@ export default function Main() {
         (lat - position[0]) * Math.sin(degree * (3.1415926535 / 180));
     }
 
-    console.log('СЕТКА: ', grid);
+    console.log('СЕТКА: ', grid); */
 
-    /*  ПОВОРОТ СЕТКИ
+    const grid = [];
+
+    // Расчет точек замера выше оси X слева
+    let lng = position[1] - stepLng;
+    let lat = position[0];
+    for (let i = 0; i < 50; i++) {
+      lat = position[0];
+      for (let j = 0; j < 50; j++) {
+        grid.push([lat, lng]);
+        lat += stepLat;
+      }
+      lng -= stepLng;
+    }
+
+    // Расчет точек замера ниже оси X слева
+    lng += stepLng;
+    lat = position[0];
+    for (let i = 0; i < 50; i++) {
+      lat = position[0] - stepLat;
+      for (let j = 0; j < 50; j++) {
+        grid.push([lat, lng]);
+        lat -= stepLat;
+      }
+      lng += stepLng;
+    }
+
+    // Расчет точек замера выше оси X справа
+    lng = position[1];
+    for (let i = 0; i < 50; i++) {
+      lat = position[0];
+      for (let j = 0; j < 50; j++) {
+        grid.push([lat, lng]);
+        lat += stepLat;
+      }
+      lng += stepLng;
+    }
+
+    // Расчет точек замера ниже оси X справа
+    lng -= stepLng;
+    lat = position[0];
+    for (let i = 0; i < 50; i++) {
+      lat = position[0] - stepLat;
+      for (let j = 0; j < 50; j++) {
+        grid.push([lat, lng]);
+        lat -= stepLat;
+      }
+      lng -= stepLng;
+    }
+
+    console.log(grid);
+
+    // ПОВОРОТ СЕТКИ
 
     newGrid = [];
-    for (let i = 0; i < grid.length; i++) {
-      let newLng =
-        position[1] +
-        (grid[i][1] - position[1]) * Math.cos(degree * (3.1415926535 / 180)) -
-        (grid[i][0] - position[0]) * Math.sin(degree * (3.1415926535 / 180));
+    let newGridObjects = [];
+    objects.map((item, index) => {
+      for (let i = 0; i < grid.length; i++) {
+        let newLng =
+          item.coordinates[1] +
+          (grid[i][1] - item.coordinates[1]) * Math.cos(degree * (3.1415926535 / 180)) -
+          (grid[i][0] - item.coordinates[0]) * Math.sin(degree * (3.1415926535 / 180));
 
-      let newLat =
-        position[0] +
-        (grid[i][1] - position[1]) * Math.sin(degree * (3.1415926535 / 180)) +
-        (grid[i][0] - position[0]) * Math.cos(degree * (3.1415926535 / 180));
+        let newLat =
+          item.coordinates[0] +
+          (grid[i][1] - item.coordinates[1]) * Math.sin(degree * (3.1415926535 / 180)) +
+          (grid[i][0] - item.coordinates[0]) * Math.cos(degree * (3.1415926535 / 180));
+        newGrid.push([newLat, newLng]);
+      }
+      newGridObjects.push(newGrid);
+      newGrid = [];
 
-      /* let x1 = [];
+      console.log('newGridObjects: ', newGridObjects);
+    });
+
+    console.log('НОВАЯ СЕТКА: ', newGridObjects);
+
+    /* let x1 = [];
       let y1 = [];
       let x2 = [];
       let y2 = [];
@@ -265,7 +332,7 @@ export default function Main() {
       y1.push(position[1] - newLng);
       x2.push(position[0] - gridCoordinates[i][0]);
       y2.push(position[1] - gridCoordinates[i][1]);
-      console.log('x, y: ', x1, x2, y1, y2); */
+      console.log('x, y: ', x1, x2, y1, y2);
     /* let newLng =
         gridCoordinates[i][1] +
         (position[1] - gridCoordinates[i][1]) * Math.cos(90 * (3.1415926535 / 180)) -
@@ -289,10 +356,16 @@ export default function Main() {
     let distsY = [];
     let arrayDistsY = [];
 
-    objects.map((item) => {
+    objects.map((item, index) => {
       distsX = [];
       for (let i = 0; i < grid.length; i++) {
-        let distX = grid[i][1] - item.coordinates[1];
+        let distX = item.coordinates[1] - grid[i][1];
+        /* if (distX >= 0) {
+          distsX.push(distX);
+        } else {
+          distX = 0;
+          distsX.push(distX);
+        } */
 
         distsX.push(distX);
       }
@@ -300,7 +373,7 @@ export default function Main() {
 
       distsY = [];
       for (let i = 0; i < grid.length; i++) {
-        let distY = grid[i][0] - item.coordinates[0];
+        let distY = item.coordinates[0] - grid[i][0];
 
         distsY.push(distY);
       }
@@ -411,7 +484,7 @@ export default function Main() {
     objects.map((item, index) => {
       for (let i = 0; i < grid.length; i++) {
         if (concentsAmmonia[index][i] > 1) {
-          pointsAmmonia.push(grid[i]);
+          pointsAmmonia.push(newGridObjects[index][i]);
         }
       }
     });
@@ -437,16 +510,14 @@ export default function Main() {
     console.log('СУММА АММИАК 1: ', sumConcentrationAmmonia);
     // console.log('СУММА СЕРОВОДОРОД 2: ', sumConcentrationHydrogen);
 
-    objects.map((point, index) => {
-      for (let i = 0; i < grid.length; i++)
-        if (sumConcentrationAmmonia[0][index][i] <= 7) {
-          pointsAmmonia.push(grid[i]);
-        }
-    });
+    // objects.map((point, index) => {
+    //   for (let i = 0; i < grid.length; i++)
+    //     if (sumConcentrationAmmonia[0][index][i] <= 7) {
+    //       pointsAmmonia.push(grid[i]);
+    //     }
+    // });
 
-    setNewGridCoordinates(newGrid);
-    setGridCoordinates(grid);
-    setPointsWithAmmonia(pointsAmmonia);
+    setGridCoordinates(newGridObjects);
   };
 
   /* function graham() {
